@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Payroll System</title>
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+    <style>
+
+        /* RESET */
+        *{
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        /* BACKGROUND */
+        body{
+            min-height: 100vh;
+            background: linear-gradient(135deg,#c3dafe,#fbcfe8,#bbf7d0);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        /* MAIN CARD */
+        .container{
+            width: 100%;
+            max-width: 1150px;
+            background: rgba(255,255,255,0.85);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+        }
+
+        /* TITLE */
+        h2{
+            text-align: center;
+            font-weight: 600;
+            margin-bottom: 25px;
+            color: #4f46e5;
+            letter-spacing: 1px;
+        }
+
+        /* FORM GRID */
+        .form-group{
+            display: grid;
+            grid-template-columns: repeat(auto-fit,minmax(220px,1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .input-box{
+            display: flex;
+            flex-direction: column;
+        }
+
+        label{
+            font-size: 13px;
+            margin-bottom: 5px;
+            color: #555;
+        }
+
+        input{
+            padding: 10px 12px;
+            border-radius: 10px;
+            border: 1px solid #ddd;
+            outline: none;
+            font-size: 14px;
+            transition: 0.3s;
+            background: #fafafa;
+        }
+
+        input:focus{
+            border-color: #6366f1;
+            box-shadow: 0 0 0 2px rgba(99,102,241,0.2);
+            background: white;
+        }
+
+        /* BUTTONS */
+        .buttons{
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        button{
+            padding: 9px 18px;
+            border: none;
+            border-radius: 30px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: 0.3s;
+            margin: 4px;
+        }
+
+        #add{
+            background: linear-gradient(to right,#34d399,#10b981);
+            color: white;
+        }
+
+        #update{
+            background: linear-gradient(to right,#60a5fa,#6366f1);
+            color: white;
+        }
+
+        #clear{
+            background: linear-gradient(to right,#f87171,#ef4444);
+            color: white;
+        }
+
+        .show{
+            background: #38bdf8;
+            color: white;
+        }
+
+        .edit{
+            background: #facc15;
+            color: #333;
+        }
+
+        .delete{
+            background: #fb7185;
+            color: white;
+        }
+
+        button:hover{
+            transform: translateY(-2px);
+            opacity: 0.9;
+            box-shadow: 0 5px 10px rgba(0,0,0,0.15);
+        }
+
+        /* TABLE */
+        table{
+            width: 100%;
+            border-collapse: collapse;
+            overflow: hidden;
+            border-radius: 15px;
+        }
+
+        thead{
+            background: linear-gradient(to right,#6366f1,#a855f7);
+            color: white;
+        }
+
+        th{
+            padding: 12px;
+            font-size: 13px;
+        }
+
+        td{
+            padding: 10px;
+            font-size: 13px;
+            text-align: center;
+            color: #444;
+        }
+
+        tbody tr{
+            background: white;
+            transition: 0.2s;
+        }
+
+        tbody tr:nth-child(even){
+            background: #f9fafb;
+        }
+
+        tbody tr:hover{
+            background: #eef2ff;
+        }
+
+        /* MOBILE */
+        @media(max-width:768px){
+            table{
+                font-size: 12px;
+            }
+        }
+
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>🌸 Payroll System</h2>
+
+<!-- FORM -->
+<div class="form-group">
+
+    <div class="input-box">
+        <label>Employee ID</label>
+        <input type="text" id="id">
+    </div>
+
+    <div class="input-box">
+        <label>Last Name</label>
+        <input type="text" id="ln">
+    </div>
+
+    <div class="input-box">
+        <label>First Name</label>
+        <input type="text" id="fn">
+    </div>
+
+    <div class="input-box">
+        <label>Middle Name</label>
+        <input type="text" id="mn">
+    </div>
+
+    <div class="input-box">
+        <label>Position</label>
+        <input type="text" id="pos">
+    </div>
+
+    <div class="input-box">
+        <label>Rate per Day</label>
+        <input type="number" id="rate">
+    </div>
+
+    <div class="input-box">
+        <label>Days Worked</label>
+        <input type="number" id="day">
+    </div>
+
+</div>
+
+<!-- BUTTONS -->
+<div class="buttons">
+    <button id="add">➕ Add</button>
+    <button id="update">♻ Update</button>
+    <button id="clear">🗑 Clear</button>
+</div>
+
+
+<!-- TABLE -->
+<table>
+
+<thead>
+<tr>
+    <th>ID</th>
+    <th>Last</th>
+    <th>First</th>
+    <th>Middle</th>
+    <th>Position</th>
+    <th>Rate</th>
+    <th>Days</th>
+    <th>Gross</th>
+    <th>Deductions</th>
+    <th>Net</th>
+    <th>Action</th>
+</tr>
+</thead>
+
+<tbody></tbody>
+
+</table>
+
+</div>
+
+
+<!-- YOUR JS (UNCHANGED) -->
+<script>
+$(document).ready(function(){
+
+    let selectedRow = null;
+
+    function clearFields(){
+        $("#id,#ln,#fn,#mn,#pos,#rate,#day").val("");
+        selectedRow = null;
+        $("#id").focus();
+    }
+
+    $("#add").click(function(){
+
+        let id = $("#id").val();
+        let ln = $("#ln").val();
+        let fn = $("#fn").val();
+        let mn = $("#mn").val();
+        let pos = $("#pos").val();
+        let rate = parseFloat($("#rate").val());
+        let day = parseFloat($("#day").val());
+
+        if(id === "" || isNaN(rate) || isNaN(day)){
+            alert("Please fill all fields");
+            return;
+        }
+
+        let gross = rate * day;
+
+        let sss = gross * 0.05;
+        let pagibig = gross * 0.03;
+        let philhealth = gross * 0.02;
+        let tax = gross * 0.05;
+
+        let deduction = sss + pagibig + philhealth + tax;
+
+        let net = gross - deduction;
+
+        let row = `
+        <tr>
+            <td>${id}</td>
+            <td>${ln}</td>
+            <td>${fn}</td>
+            <td>${mn}</td>
+            <td>${pos}</td>
+            <td>${rate.toFixed(2)}</td>
+            <td>${day}</td>
+            <td>${gross.toFixed(2)}</td>
+            <td>${deduction.toFixed(2)}</td>
+            <td>${net.toFixed(2)}</td>
+            <td>
+                <button class="show">Show</button>
+                <button class="edit">Edit</button>
+                <button class="delete">Delete</button>
+            </td>
+        </tr>
+        `;
+
+        $("tbody").append(row);
+        clearFields();
+    });
+
+    $(document).on("click",".delete",function(){
+        $(this).closest("tr").remove();
+        clearFields();
+    });
+
+    $(document).on("click",".edit",function(){
+
+        selectedRow = $(this).closest("tr");
+
+        $("#id").val(selectedRow.find("td:eq(0)").text());
+        $("#ln").val(selectedRow.find("td:eq(1)").text());
+        $("#fn").val(selectedRow.find("td:eq(2)").text());
+        $("#mn").val(selectedRow.find("td:eq(3)").text());
+        $("#pos").val(selectedRow.find("td:eq(4)").text());
+        $("#rate").val(selectedRow.find("td:eq(5)").text());
+        $("#day").val(selectedRow.find("td:eq(6)").text());
+    });
+
+    $("#update").click(function(){
+
+        if(selectedRow === null){
+            alert("Select a row first");
+            return;
+        }
+
+        let rate = parseFloat($("#rate").val());
+        let day = parseFloat($("#day").val());
+
+        let gross = rate * day;
+
+        let sss = gross * 0.05;
+        let pagibig = gross * 0.03;
+        let philhealth = gross * 0.02;
+        let tax = gross * 0.05;
+
+        let deduction = sss + pagibig + philhealth + tax;
+
+        let net = gross - deduction;
+
+        selectedRow.find("td:eq(0)").text($("#id").val());
+        selectedRow.find("td:eq(1)").text($("#ln").val());
+        selectedRow.find("td:eq(2)").text($("#fn").val());
+        selectedRow.find("td:eq(3)").text($("#mn").val());
+        selectedRow.find("td:eq(4)").text($("#pos").val());
+        selectedRow.find("td:eq(5)").text(rate.toFixed(2));
+        selectedRow.find("td:eq(6)").text(day);
+        selectedRow.find("td:eq(7)").text(gross.toFixed(2));
+        selectedRow.find("td:eq(8)").text(deduction.toFixed(2));
+        selectedRow.find("td:eq(9)").text(net.toFixed(2));
+
+        clearFields();
+    });
+
+    $("#clear").click(function(){
+        clearFields();
+    });
+
+});
+</script>
+
+</body>
+</html>
